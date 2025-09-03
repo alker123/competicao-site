@@ -218,7 +218,7 @@ btnQuartas.addEventListener("click", () => {
 btnSemifinal.addEventListener("click", () => {
     console.log("🔘 Botão Semifinal clicado");
     atualizarFaseAtiva("semi-final", btnSemifinal);
-    carregarDadosDaFase("semifinal");
+    carregarDadosDaFase("semi-final");
     carregarEnviosParaOperador3();
 });
 

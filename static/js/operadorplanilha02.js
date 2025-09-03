@@ -193,7 +193,7 @@ window.quartas = function() {
 };
 
 window.semifinal = function() {
-  marcarMelhores(4, "semifinal");
+  marcarMelhores(4, "semi-final");
 };
 
 window.final = function() {
@@ -264,7 +264,7 @@ window.enviar1 = function () {
   } else if (qtd === 8) {
     enviarSelecionados("quartas", 8);
   } else if (qtd === 4) {
-    enviarSelecionados("semifinal", 4);
+    enviarSelecionados("semi-final", 4);
   } else if (qtd === 2) {
     enviarSelecionados("final", 2);
   } else {
