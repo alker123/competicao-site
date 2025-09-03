@@ -1,5 +1,5 @@
 import { db3 } from './firebase.js';
-import { ref, get, set, remove } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+import { ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 
 // ELEMENTOS PRINCIPAIS
 const tabelaPrincipal = document.querySelector("#tabela-principal tbody");
@@ -10,7 +10,10 @@ const seletorFaseGrupo = document.getElementById("seletor-fase-grupo");
 
 let todosDados = [];
 let categoriaSelecionada = "";
-let mediasFinaisMap = new Map(); // Mapa com média final real
+let mediasFinaisMap = new Map();
+
+// Para evitar duplicar eventos
+let listenersAtivos = [];
 
 // EVENTOS
 seletorRitmo.addEventListener("change", () => {
@@ -24,13 +27,11 @@ seletorCategoria.addEventListener("change", () => {
 });
 
 seletorFaseGrupo.addEventListener("change", () => {
-  const ritmoSelecionado = seletorRitmo.value;
-  const grupoFaseSelecionado = seletorFaseGrupo.value;
-
-  carregarDadosPorGrupoFase(ritmoSelecionado, grupoFaseSelecionado);
+  carregarDadosPorGrupoFase(seletorRitmo.value, seletorFaseGrupo.value);
 });
 
-async function carregarDadosPorGrupoFase(ritmo, grupoFase) {
+// FUNÇÃO PRINCIPAL
+function carregarDadosPorGrupoFase(ritmo, grupoFase) {
   const caminhos = {
     classificatória: {
       A: ref(db3, `classificatóriaA/${ritmo}`),
@@ -59,38 +60,47 @@ async function carregarDadosPorGrupoFase(ritmo, grupoFase) {
     }
   };
 
-  const dados = { A: {}, B: {}, C: {} };
-
-  // Verifica se o grupoFase existe no objeto caminhos
   if (!caminhos[grupoFase]) return;
 
-  // Limpar dados anteriores antes de carregar novos
+  // Cancela os listeners anteriores
+  listenersAtivos.forEach(unsub => unsub());
+  listenersAtivos = [];
+
+  const dados = { A: {}, B: {}, C: {} };
+
+  Object.entries(caminhos[grupoFase]).forEach(([fase, caminhoRef]) => {
+    // O retorno de onValue é uma função que remove o listener
+    const unsubscribe = onValue(caminhoRef, snap => {
+      dados[fase] = {};
+
+      if (snap.exists()) {
+        snap.forEach(child => {
+          const atleta = child.val().atleta || "";
+          const categoria = child.val().categoria || "";
+          if (!atleta || !categoria) return;
+          dados[fase][child.key] = child.val();
+        });
+      }
+
+      // Sempre recalcula tabela quando qualquer jurado muda algo
+      processarDados(dados);
+    });
+
+    listenersAtivos.push(unsubscribe);
+  });
+}
+
+// PROCESSAMENTO
+function processarDados(dados) {
   todosDados = [];
   mediasFinaisMap.clear();
 
-  // Lê os dados para cada fase dentro do grupo de fase selecionado
+  const chaves = new Set([
+    ...Object.keys(dados.A),
+    ...Object.keys(dados.B),
+    ...Object.keys(dados.C)
+  ]);
 
-  await Promise.all(Object.entries(caminhos[grupoFase]).map(async ([fase, caminhoRef]) => {
-    const snap = await get(caminhoRef);
-
-    if (snap.exists()) {
-      snap.forEach(child => {
-        // Verifica se existe a chave 'atleta' e 'categoria' antes de adicionar os dados.....
-        const atleta = child.val().atleta || "";
-        const categoria = child.val().categoria || "";
-
-        // Se a chave 'atleta' ou 'categoria' não existir, ignora o dado......
-        if (!atleta || !categoria) return;
-
-        dados[fase][child.key] = child.val();
-      });
-    }
-  }));
-
-
-  const chaves = new Set([...Object.keys(dados.A), ...Object.keys(dados.B), ...Object.keys(dados.C)]);
-
-  // Processa as chaves e organiza os dados
   chaves.forEach(key => {
     const a = dados.A[key] ?? {};
     const b = dados.B[key] ?? {};
@@ -98,11 +108,8 @@ async function carregarDadosPorGrupoFase(ritmo, grupoFase) {
 
     const atleta = a.atleta || b.atleta || c.atleta || "";
     const categoria = a.categoria || b.categoria || c.categoria || "";
-
-    // Verifica se os dados estão completos para o atleta e categoria
     if (!atleta || !categoria) return;
 
-    // Calculando as notas finais
     const notaA = parseFloat(a.nota || 0);
     const vantagemA = parseFloat(a.vantagem || 0);
     const notaFinalA = notaA + vantagemA;
@@ -115,16 +122,11 @@ async function carregarDadosPorGrupoFase(ritmo, grupoFase) {
     const vantagemC = parseFloat(c.vantagem || 0);
     const notaFinalC = notaC + vantagemC;
 
-    // Soma das notas finais
     const somaNotas = notaFinalA + notaFinalB + notaFinalC;
+    const media = parseFloat((somaNotas / 3).toFixed(2));
 
-    // Cálculo da média arredondada para duas casas decimais
-    const media = parseFloat((somaNotas / 3).toFixed(2)); // Divide a soma das notas por 3 e arredonda para 2 casas decimais
-
-    // Salva a média final real
     mediasFinaisMap.set(atleta + "||" + categoria, media);
 
-    // Salva os dados, incluindo a foto
     todosDados.push({
       atleta,
       categoria,
@@ -139,16 +141,15 @@ async function carregarDadosPorGrupoFase(ritmo, grupoFase) {
       notaFinalC,
       media,
       numero: a.numero || b.numero || c.numero || "",
-      foto: a.foto || b.foto || c.foto || ""  // A URL da foto
+      foto: a.foto || b.foto || c.foto || ""
     });
 
-    // Salva a média final no Firebase
     salvarMediaNoFirebase({
       atleta,
       categoria,
       media,
       numero: a.numero || b.numero || c.numero || "",
-      foto: a.foto || b.foto || c.foto || ""  // Passa a foto do atleta ao salvar
+      foto: a.foto || b.foto || c.foto || ""
     });
   });
 
@@ -156,59 +157,26 @@ async function carregarDadosPorGrupoFase(ritmo, grupoFase) {
   exibirLinhasFiltradas();
 }
 
-
-// Função para salvar a média final no Firebase
-//function salvarMediaNoFirebase(dado) {
- // const mediaComDuasCasas = (Math.floor(dado.media * 100) / 100).toFixed(2);
- // const fotoUrl = dado.foto ? dado.foto : "";  // Caso não tenha foto, salva como string vazia
- // const numero = dado.numero || "";
- // const mediaRef = ref(db3, `medias/${seletorRitmo.value}/${seletorFaseGrupo.value}/${dado.atleta}||${dado.categoria}`);
-  
- // set(mediaRef, {
-  //  media: mediaComDuasCasas,
-  //  atleta: dado.atleta,
-  //  categoria: dado.categoria,
-  //  numero: numero, 
- //   foto: fotoUrl
- // }).catch(error => {
- //   console.error("Erro ao salvar média no Firebase: ", error);
-//   });
-//}
-
-// Função para salvar a média final no Firebase
+// SALVAR MÉDIA NO FIREBASE
 function salvarMediaNoFirebase(dado) {
   const mediaComDuasCasas = (Math.floor(dado.media * 100) / 100).toFixed(2);
-  const fotoUrl = dado.foto ? dado.foto : "";  // Caso não tenha foto, salva como string vazia
+  const fotoUrl = dado.foto ? dado.foto : "";
   const numero = dado.numero || "";
 
-  // Pegando o ritmo selecionado do seletor
-  const ritmoSelecionado = document.getElementById("seletor-ritmo").value;
-
-  // Definir a chave correspondente ao ritmo selecionado
+  const ritmoSelecionado = seletorRitmo.value;
   let mediaKey = "";
-  
-  // Atualizar a chave de acordo com o ritmo selecionado
+
   switch (ritmoSelecionado) {
-    case 'angola':
-      mediaKey = 'mediaAngola';
-      break;
-    case 'iuna':
-      mediaKey = 'mediaIuna';
-      break;
-    case 'regional':
-      mediaKey = 'mediaRegional';
-      break;
-    default:
-      console.error("Ritmo não selecionado corretamente");
-      return;  // Não faz nada se não for selecionado corretamente
+    case 'angola': mediaKey = 'mediaAngola'; break;
+    case 'iuna': mediaKey = 'mediaIuna'; break;
+    case 'regional': mediaKey = 'mediaRegional'; break;
+    default: return;
   }
 
-  // Caminho para salvar a média no Firebase com base na fase e o atleta
   const mediaRef = ref(db3, `medias/${ritmoSelecionado}/${seletorFaseGrupo.value}/${dado.atleta}||${dado.categoria}`);
   
-  // Salvando a média específica para o ritmo selecionado
   set(mediaRef, {
-    [mediaKey]: mediaComDuasCasas,  // Salva a média para a chave correspondente ao ritmo
+    [mediaKey]: mediaComDuasCasas,
     atleta: dado.atleta,
     categoria: dado.categoria,
     numero: numero,
@@ -218,10 +186,7 @@ function salvarMediaNoFirebase(dado) {
   });
 }
 
-
-
-
-// Função para atualizar as categorias no seletor
+// ATUALIZA SELETOR DE CATEGORIAS
 function atualizarSeletorCategorias() {
   const categorias = [...new Set(todosDados.map(d => d.categoria))].sort();
   seletorCategoria.innerHTML = '<option value="">Todas</option>';
@@ -234,7 +199,7 @@ function atualizarSeletorCategorias() {
   seletorCategoria.value = categoriaSelecionada || "";
 }
 
-// Função para exibir as linhas filtradas na tabela principal
+// MONTA A TABELA
 function exibirLinhasFiltradas() {
   tabelaPrincipal.innerHTML = "";
   const mapaUnico = new Map();
@@ -271,3 +236,9 @@ function exibirLinhasFiltradas() {
   });
 }
 
+// ✅ Chamar já no início para não precisar trocar o seletor manualmente
+window.addEventListener("load", () => {
+  if (seletorRitmo.value && seletorFaseGrupo.value) {
+    carregarDadosPorGrupoFase(seletorRitmo.value, seletorFaseGrupo.value);
+  }
+});
