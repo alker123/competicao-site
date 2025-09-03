@@ -1,0 +1,270 @@
+
+
+/* GERAL */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+}
+
+/* CONTÊINER PRINCIPAL */
+.tabela-container {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 20px;
+  background: linear-gradient(135deg, #404040 0%, #4a4a4a 100%);
+  border-radius: 8px;
+  border: 1px solid #555;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  position: relative;
+  top: -560px !important;
+  left: 200px !important;
+}
+
+/* CONTÊINER PRINCIPAL */
+.container1 {
+  background: linear-gradient(135deg, #404040 0%, #4a4a4a 100%);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;  /* Raio suave */
+  padding: 10px;  /* Diminuí o padding para reduzir o espaço interno */
+  width: 100%;  /* Mantém a largura 100% */
+  max-width: 1000px;  /* Limita a largura máxima */
+  margin: 0 auto;  /* Centraliza o contêiner */
+  height: auto;  /* Altura automática */
+  min-height: 10px;  /* A altura mínima ainda é pequena */
+  box-sizing: border-box;  /* Inclui o padding nas dimensões do contêiner */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;  /* Ajusta o alinhamento do conteúdo */
+}
+
+/* TÍTULO */
+#h2-1 {
+  font-size: 1.2rem;  /* Reduzi o tamanho da fonte */
+  margin-bottom: 15px;  /* Diminuí o espaçamento abaixo */
+  color: #fff;
+}
+
+#ritmo-atual {
+  font-weight: bold;
+  color: #ff6b35;
+}
+
+/* SELETORES */
+.select-estilizado,
+.select-estilizado2,
+.select-estilizado3,
+#seletor-fase-grupo1,
+#seletor-fase-grupo {
+  width: 180px;  /* Reduzi a largura */
+  padding: 6px;  /* Diminuí o padding */
+  margin: 0 8px 8px 0;  /* Diminuí a margem */
+  border-radius: 4px;
+  border: 2px solid #555;
+  font-size: 0.9rem;  /* Font menor */
+  color: #fff;
+  background: #2d2d2d;
+  transition: all 0.3s ease;
+}
+
+.select-estilizado:hover,
+.select-estilizado2:hover,
+.select-estilizado3:hover,
+#seletor-fase-grupo1:hover,
+#seletor-fase-grupo:hover {
+  border-color: #007bff;
+}
+
+.select-estilizado:focus,
+.select-estilizado2:focus,
+#seletor-fase-grupo:focus {
+  outline: none;
+  border-color: #ff6b35;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+label {
+  font-size: 1rem;  /* Diminuí o tamanho da fonte */
+  color: #fff;
+  margin-right: 8px;
+}
+
+/* BOTÕES */
+.botoes-acoes,
+.botoes-acoes1 {
+  margin-bottom: 10px;  /* Reduzi o espaçamento inferior */
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#MediaTotal,
+#voltarParaTabelaPrincipal,
+#PDF0, #PDF1,
+#excluir,
+#enviar1,
+#oitavas, #quartas,#semifinal, #final {
+  padding: 0.4rem;
+  border-radius: 10px;
+  border: none;
+  color: #eef2f8;
+  background: linear-gradient(135deg, #002752 0%, #004085 50%, #0056b3 100%);
+  text-align: center;
+  margin-right: 10px; /* Distância entre os botões */
+}
+
+#voltarParaTabelaPrincipal:hover,
+#MediaTotal:hover,
+#PDF0:hover, #PDF1:hover,
+#enviar:hover,
+#excluir:hover,
+#oitavas:hover, #quartas:hover, #semifinal:hover, #final:hover {
+ background: linear-gradient(135deg, #0056b3 0%, #004085 50%, #002752 100%);
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+button:active {
+  background-color: #1e7e34;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* TABELA PRINCIPAL */
+.scroll-tabela, .scroll-tabela1 {
+  overflow-x: auto;
+  margin-top: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+th, td {
+  padding: 8px 6px;  /* Reduzi o padding nas células */
+  text-align: center;
+  border: 1px solid #ddd;
+  color: #333;
+  background-color: #fff;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+th {
+  background-color: #ff6b35;
+  text-align: center;
+  color: #fff;
+  font-size: 0.85rem;  /* Fonte menor no cabeçalho */
+  font-weight: bold;
+}
+
+td {
+  background-color: #f9f9f9;
+  font-size: 0.85rem;  /* Fonte menor nas células */
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+td:hover {
+  background-color: #f1f1f1;
+}
+
+td[contenteditable="true"]:empty:before {
+  content: "Clique para editar";
+  color: #888;
+}
+
+input[type="checkbox"] {
+  transform: scale(1.3);  /* Aumentei um pouco o tamanho do checkbox */
+  cursor: pointer;
+}
+
+tr:nth-child(odd) td {
+  background-color: #fafafa;
+}
+
+tr:nth-child(even) td {
+  background-color: #f0f0f0;
+}
+
+/* SCROLL DA TABELA */
+.scroll-tabela {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.top16 {
+  background-color: lightgreen !important;
+  font-weight: bold;
+}
+
+
+/* Estilo para o checkbox selecionado */
+input[type="checkbox"]:checked {
+  background-color: #ff7f50;  /* Cor laranja ou a cor de sua escolha */
+  border-color: #159fd5; /* Cor da borda do checkbox */
+  box-shadow: 0 0 10px 1px rgba(86, 80, 255, 0.36); /* Sombra quando selecionado */
+}
+
+/* Estilo para o checkbox não selecionado */
+input[type="checkbox"]:not(:checked) {
+  background-color: #dcdcdc;  /* Cor do checkbox não selecionado */
+  border-color: #aca7a7; /* Cor da borda quando não selecionado */
+}
+
+/* Estilo geral dos checkboxes */
+input[type="checkbox"] {
+  width: 15px; /* Tamanho do checkbox */
+  height: 15px; /* Tamanho do checkbox */
+  appearance: none; /* Remove o estilo padrão do checkbox */
+  border: 1px solid #ccc; /* Cor da borda */
+  border-radius: 5px; /* Borda arredondada */
+  position: relative;
+  cursor: pointer;
+  background-color: #fff; /* Cor de fundo */
+}
+
+/* Estilo do checkmark (marca de seleção) */
+input[type="checkbox"]:checked::after {
+  content: "✔"; /* Marca de seleção */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px; /* Tamanho do checkmark */
+  color: white; /* Cor do checkmark */
+}
+
+
+
+
+/* MÍDIAS */
+@media (max-width: 768px) {
+  .tabela-container {
+    padding: 10px;  /* Menos padding em telas pequenas */
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  .select-estilizado,
+  .select-estilizado2 {
+    width: 140px;  /* Reduzi a largura dos seletores */
+  }
+
+  table, th, td {
+    font-size: 0.85rem;  /* Fonte menor em telas pequenas */
+  }
+
+  button {
+    padding: 6px 10px;  /* Botões menores */
+    font-size: 0.85rem;
+  }
+}

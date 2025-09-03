@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="title">Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <!-- Link para o CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}" />
+
+  <!-- Scripts do Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <!--<script src="{{ url_for('static', filename='js/firebase1.js') }}"></script>-->
+  
+
+</head>
+<body>
+    <!-- Imagem centralizada e fixa -->
+    <img id="img-movel" src="{{ url_for('static', filename='imagens/voando-alto-psd.png') }}" alt="Logo" draggable="false">
+
+    <!-- Botões de idioma -->
+    <div class="lang-buttons">
+        <button id="pt" class="active">
+            <img src="{{ url_for('static', filename='imagens/br.png') }}" alt="Português">
+        </button>
+        <button id="en">
+            <img src="{{ url_for('static', filename='imagens/us.png') }}" alt="English">
+        </button>
+        <button id="es">
+            <img src="{{ url_for('static', filename='imagens/es.png') }}" alt="Español">
+        </button>
+    </div>
+
+  <div class="login-container">
+        <div class="login-header">
+            <h1>🔐</h1>
+            <h1>Login</h1>
+            <p>Acesse sua conta</p>
+        </div>
+        <div id="alert" class="alert"></div>
+        <form id="loginForm">
+            <input type="text" id="usuario" name="usuario" required autocomplete="username" placeholder="Digite seu email">
+            <input type="password" id="senha" name="senha" required autocomplete="current-password" placeholder="Digite sua senha">
+            <button type="submit" id="btnLogin" class="btn-login"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+            <p id="mensagem" class="mensagem-erro"></p>
+            <div class="loading" id="loading"></div>
+        </form>
+        <div id="clock"></div> <!-- Hora em tempo real será mostrada aqui -->
+        <div class="footer">
+            <p>&copy; 2025 Sistema de Autenticação</p>
+        </div>
+  </div>
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/translate-login.js') }}"></script>
+
+
+</body>
+</html>

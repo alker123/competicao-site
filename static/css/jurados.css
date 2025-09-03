@@ -1,0 +1,305 @@
+/* Centralização do container na tela */
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #1e1e1e;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+/* Header */
+.header {
+  width: 100%;
+  background: linear-gradient(135deg, #2d2d2d 0%, #404040 100%);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-bottom: 4px solid #ff6b35;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0.1rem 20px; /* Reduzido para diminuir altura vertical */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo h1 {
+  color: #ff6b35;
+  font-size: 1.5rem; /* Também pode diminuir a fonte se quiser um header ainda menor */
+  font-weight: bold;
+  margin: 0;
+}
+
+.logo p {
+  color: #fff;
+  font-size: 0.9rem; /* Tamanho menor para subtítulo */
+  margin: 0;
+}
+
+/* Form container - renomeado para evitar conflito com header layout */
+.form-container {
+  background: #cac8c6;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(208, 151, 6, 0.1);
+  width: 100%;
+  max-width: 400px;
+  margin-top: 40px; /* espaço abaixo do cabeçalho */
+}
+
+.avaliacao-box {
+  border: 2px solid #726d6a;
+  border-radius: 12px;
+  padding: 15px 30px;
+  margin-top: 40px;
+  background-color: #2c2c2c;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 0.3s ease-in-out;
+  max-width: 500px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+
+.avaliacao-box:hover {
+  box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3); /* efeito hover */
+}
+
+/* Título */
+h1 {
+  margin-bottom: 30px;
+  text-align: center;
+  color: #e37a0b;
+}
+
+/* Labels */
+label {
+  display: block;
+  margin-top: 20px;
+  font-weight: 600;
+  color: #e37a0b;
+}
+
+/* Inputs e botões */
+.input-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.input-container input,
+.input-container button {
+  width: 48%;
+  padding: 10px;
+  margin-top: 6px;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.input-container button {
+  cursor: pointer;
+  background: linear-gradient(135deg, #FF7F32 0%, #FF6A13 50%, #ff6b35 100%); /* Laranja escuro */
+  color: rgb(15, 15, 15);
+  font-weight: bold;
+  transition: background 0.3s;
+}
+.input-container button:hover {
+   background: linear-gradient(135deg, #FF6A13 0%, #E65C00 50%, #D14A00 100%); /* Laranja mais escuro */
+    box-shadow: 0 8px 25px rgba(255, 127, 50, 0.4); /* Sombra de laranja escuro */
+    transform: translateY(-2px);
+}
+
+.input-text {
+  background-color: transparent;
+  border: none;
+  width: 48%;
+  font-size: 16px;
+  padding: 10px;
+  text-align: center;
+  color: #fff !important;
+  position: relative; /* Adicionei o position aqui */
+}
+
+#categoria.input-text {
+  left: -80px; /* Move o elemento para a direita */
+  top: 9px;
+  color: #fff !important;
+}
+
+#ritmo.input-text {
+  left: -110px; /* Move o elemento para a direita */
+  top: 9px;
+  color: #fff !important;
+}
+#fase.input-text {
+  left: -110px;
+  top: 9px;
+  color: #fff;
+}
+
+/* Container da Foto do Atleta */
+#foto-atleta-container {
+  display: none;  /* Inicialmente escondido */
+  margin-top: 20px;
+  text-align: center;  /* Centraliza a imagem */
+}
+
+/* Estilo da imagem do atleta */
+#foto-atleta {
+  width: 100%;
+  max-width: 200px;  /* Limita o tamanho máximo da imagem */
+  height: auto;
+  border-radius: 10px;
+  border: 2px solid #ff6b35;  /* Cor da borda */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  /* Sombra suave ao redor da imagem */
+  object-fit: cover;  /* Garantir que a imagem preencha o espaço corretamente */
+}
+
+
+
+#atleta {
+  background-color: #222;   /* ou algo como #2b2b2b */
+  color: #faf8f7;
+  border: 1px solid #4d504e;
+}
+select {
+  background-color: #222; /* fundo escuro */
+  color: rgb(245, 243, 240);          /* cor do texto */
+  border: 1px solid rgb(86, 86, 84);
+  padding: 10px;
+  border-radius: 5px;
+}
+
+/* Para navegadores que suportam */
+option {
+  background-color: #222;
+  color: white;
+}
+
+#nota {
+  background-color: #222;   /* ou algo como #2b2b2b */
+  color: #fff;
+  border: 1px solid #4d504e;
+}
+
+#vantagem {
+  background-color: #222;
+  color: #fff;
+  border: 1px solid #4d504e;
+}
+
+
+input[readonly] {
+  background-color: transparent;
+}
+
+/* Dropdown atleta */
+#atleta {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #6b6a65;
+  background-color: transparent;
+  margin-top: 6px;
+}
+
+/* Botão de envio */
+#enviar {
+  width: auto;
+  padding: 10px 20px;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  margin: 20px auto 0;
+  display: block;
+  transition: background 0.3s;
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 50%, #004085 100%);
+}
+#enviar:hover {
+  background: linear-gradient(135deg, #0056b3 0%, #004085 50%, #002752 100%);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+.label-centralizada {
+  text-align: center;
+  width: 100%;
+  margin-top: 30px;
+}
+.lang-buttons {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 5px;
+  z-index: 200;
+}
+
+
+.lang-buttons button {
+  background: none;
+  border: none;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.lang-buttons {
+  text-align: right;
+  margin-bottom: 10px;
+}
+.lang-buttons button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.lang-buttons img {
+  width: 24px;
+  height: 16px;
+  border-radius: 3px;
+  opacity: 0.85;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.lang-buttons img:hover {
+  transform: scale(1.1);
+  opacity: 1;
+}
+.logo {
+  margin-top: 30px;
+}
+/* Estilo para celular - reduz altura vertical */
+@media (max-width: 480px) {
+  .avaliacao-box {
+    padding: 10px 15px;     /* menos espaço interno */
+    margin-top: 15px;       /* menos espaço em cima */
+  }
+
+  .avaliacao-box h2,       /* reduz tamanho dos textos */
+  .avaliacao-box label {
+    font-size: 14px;
+  }
+
+  .avaliacao-box select,
+  .avaliacao-box input,
+  .avaliacao-box button {
+    padding: 6px 8px;
+    font-size: 14px;
+  }
+
+  .avaliacao-box .nota,
+  .avaliacao-box .vantagem {
+    margin: 8px 0;
+  }
+}

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 50%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-header {
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .alert-error {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+        }
+
+        .alert-success {
+            background: #efe;
+            color: #363;
+            border: 1px solid #cfc;
+        }
+
+        .loading {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 14px;
+        }
+        
+         /* Estilo para a hora */
+        
+         #clock {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #666;
+            text-align: left;
+            
+        }
+
+        .test-connection {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+       
+      
+    </style>
+</head>
+<body>
+    <div class="login-container">
+    <div class="login-header">
+            <h1>🔐</h1>
+            <h1>Login</h1>
+            <p>Acesse sua conta</p>
+    </div>
+    <div id="alert" class="alert"></div>
+    <input type="text" id="usuario" placeholder="Usuário" data-translate-placeholder="username" />
+    <input type="password" id="senha" placeholder="Senha" data-translate-placeholder="password" />
+    <button id="btnLogin">Entrar</button>
+    <p id="mensagem" class="mensagem-erro"></p>
+    <div id="clock"></div> <!-- Hora em tempo real será mostrada aqui -->
+    <div class="footer">
+    <p>&copy; 2025 Sistema de Avaliação</p>
+    </div>
+
+  </div>
+  
+  <div class="login-container">
+        <div class="login-header">
+            <h1>🔐</h1>
+            <h1>Login</h1>
+            <p>Acesse sua conta</p>
+        </div>
+        <div id="alert" class="alert"></div>
+        <form id="loginForm">
+            <input type="text" id="usuario" name="usuario" required autocomplete="username" placeholder="Digite seu email">
+            <input type="password" id="senha" name="senha" required autocomplete="current-password" placeholder="Digite sua senha">
+            <button type="submit" id="btnLogin" class="btn-login">Entrar</button>
+            <p id="mensagem" class="mensagem-erro"></p>
+            <div class="loading" id="loading"></div>
+        </form>
+        <div id="clock"></div> <!-- Hora em tempo real será mostrada aqui -->
+        <div class="footer">
+            <p>&copy; 2025 Sistema de Autenticação</p>
+        </div>
+  </div>
+
+
+    <script>
+        const form = document.getElementById('loginForm');
+        const alert = document.getElementById('alert');
+        const loading = document.getElementById('loading');
+        const btnLogin = document.getElementById('btnLogin');
+        
+
+        function showAlert(message, type = 'error') {
+            alert.textContent = message;
+            alert.className = `alert alert-${type}`;
+            alert.style.display = 'block';
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+
+        function showDebug(message) {
+            debugInfo.innerHTML += `<div>${new Date().toLocaleTimeString()}: ${message}</div>`;
+            debugInfo.style.display = 'block';
+        }
+
+        function setLoading(isLoading) {
+            if (isLoading) {
+                btnLogin.disabled = true;
+                btnLogin.textContent = 'Entrando...';
+                loading.style.display = 'block';
+            } else {
+                btnLogin.disabled = false;
+                btnLogin.textContent = 'Entrar';
+                loading.style.display = 'none';
+            }
+        }
+        // Função para atualizar a hora a cada segundo
+        function updateClock() {
+            const currentTime = new Date().toLocaleTimeString();
+            document.getElementById('clock').textContent = `${currentTime}: Página de login carregada`;
+        }
+
+        // Atualizar o relógio a cada segundo
+        setInterval(updateClock, 1000);
+
+
+        async function testFirebaseConnection() {
+            try {
+                showDebug('Testando conexão com Firebase...');
+                const response = await fetch('/auth/test-firebase');
+                const data = await response.json();
+                showDebug(`Firebase Status: ${data.status} - ${data.message}`);
+                
+                if (data.status === 200) {
+                    showAlert('Conexão com Firebase OK!', 'success');
+                } else {
+                    showAlert('Erro na conexão com Firebase', 'error');
+                }
+            } catch (error) {
+                showDebug(`Erro ao testar Firebase: ${error.message}`);
+                showAlert('Erro ao testar conexão', 'error');
+            }
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const usuario = document.getElementById('usuario').value.trim();
+            const senha = document.getElementById('senha').value.trim();
+            
+            showDebug(`Tentando login com usuário: ${usuario}`);
+            
+            if (!usuario || !senha) {
+                showAlert('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            setLoading(true);
+            alert.style.display = 'none';
+
+            try {
+                showDebug('Enviando dados para /auth/...');
+                
+                const response = await fetch('/auth/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        usuario: usuario, 
+                        senha: senha 
+                    })
+                });
+
+                showDebug(`Resposta do servidor: ${response.status}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                showDebug(`Dados recebidos: ${JSON.stringify(data)}`);
+
+                if (data.success) {
+                    showAlert(`Login realizado com sucesso! Redirecionando para ${data.tipo}...`, 'success');
+                    
+                    if (data.clear_fields) {
+                        form.reset();
+                    }
+                    
+                    setTimeout(() => {
+                        showDebug(`Redirecionando para: ${data.rota}`);
+                        window.location.href = data.rota;
+                    }, 1500);
+                } else {
+                    showAlert(data.message || 'Erro ao fazer login');
+                    showDebug(`Erro de login: ${data.message}`);
+                }
+            } catch (error) {
+                const errorMsg = `Erro de conexão: ${error.message}`;
+                showAlert('Erro de conexão. Verifique sua internet e tente novamente.');
+                showDebug(errorMsg);
+                console.error('Erro completo:', error);
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // Limpar alertas ao digitar
+        document.getElementById('usuario').addEventListener('input', () => {
+            alert.style.display = 'none';
+        });
+        
+        document.getElementById('senha').addEventListener('input', () => {
+            alert.style.display = 'none';
+        });
+
+        
+    </script>
+    
+  <script>
+    // Tempo máximo de inatividade (30 minutos)
+const maxInactivityTime = 30 * 60 * 1000; // 1800000 ms
+let inactivityTimer;
+
+// Função para resetar o timer de inatividade
+function resetInactivityTimer() {
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(() => {
+        // Redireciona para login após 30 minutos de inatividade
+        window.location.href = "/logout"; // Ou "/login" se preferir
+    }, maxInactivityTime);
+}
+
+// Eventos para detectar atividade do usuário
+['click', 'mousemove', 'keydown', 'scroll'].forEach(evt => {
+    window.addEventListener(evt, resetInactivityTimer);
+});
+
+// Inicia o timer na primeira carga
+resetInactivityTimer();
+  
+
+// Função para verificar se o usuário está autenticado
+function verificarLogin() {
+    fetch('/verificar_login')
+        .then(response => response.json())
+        .then(data => {
+            if (!data.autenticado) {
+                // Se não estiver autenticado, redireciona para o login
+                window.location.href = '/';  // Redireciona para a página index (login)
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao verificar login:', error);
+        });
+}
+
+// Chama a função de verificação quando a página carregar
+window.onload = function() {
+    // Se a URL contiver qualquer uma das páginas protegidas, verifica se o usuário está logado
+    const paginasProtegidas = ['/admin', '/operador', '/juradoA', '/juradoB', '/juradoC'];
+    
+    // Verifica se a URL atual corresponde a uma das páginas protegidas
+    if (paginasProtegidas.some(pagina => window.location.pathname.includes(pagina))) {
+        verificarLogin();
+    }
+};
+
+// Quando o usuário tentar acessar diretamente a página sem estar autenticado
+document.addEventListener('DOMContentLoaded', function() {
+    // Previne o acesso não autorizado nas páginas específicas
+    const paginasProtegidas = ['/admin', '/operador', '/juradoA', '/juradoB', '/juradoC'];
+
+    // Verifica se a URL atual corresponde a uma das páginas protegidas
+    if (paginasProtegidas.some(pagina => window.location.pathname === pagina)) {
+        verificarLogin();
+    }
+});
+
+
+    document.getElementById('btnLogin').addEventListener('click', function(event) {
+        // Prevenir o comportamento padrão (evitar que o botão envie o formulário)
+        event.preventDefault();
+
+        // Capturar os valores dos campos
+        const usuario = document.getElementById('usuario').value;
+        const senha = document.getElementById('senha').value;
+
+        // Verificar se os campos não estão vazios
+        if (!usuario || !senha) {
+            document.getElementById('mensagem').textContent = "Por favor, preencha todos os campos.";
+            return;
+        }
+
+        // Enviar os dados para o Flask via fetch (AJAX)
+        fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ usuario: usuario, senha: senha }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Limpar os campos de usuário e senha após login bem-sucedido
+                document.getElementById('usuario').value = '';
+                document.getElementById('senha').value = '';
+
+                window.location.href = data.rota; // Redireciona para a rota de sucesso
+            } else {
+                document.getElementById('mensagem').textContent = data.message || 'Usuário ou senha incorretos';
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            document.getElementById('mensagem').textContent = "Ocorreu um erro, tente novamente.";
+        });
+    });
+
+  </script>
+</body>
+</html>

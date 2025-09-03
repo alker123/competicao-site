@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jurados.css') }}">
+  <title>Jurado A - Avaliação</title> 
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <h1>👨‍⚖️ Jurado</h1>
+          <p>Sistema de Competição de Capoeira</p>
+        </div>
+        <div class="lang-buttons">
+          <button id="pt" class="lang-btn active" data-lang="pt">
+            <img src="{{ url_for('static', filename='imagens/br.png') }}" alt="Português">
+            <span class="lang-text">PT</span>
+          </button>
+
+          <button id="en" class="lang-btn" data-lang="en">
+            <img src="{{ url_for('static', filename='imagens/us.png') }}" alt="English">
+            <span class="lang-text">EN</span>
+          </button>
+
+          <button id="es" class="lang-btn" data-lang="es">
+            <img src="{{ url_for('static', filename='imagens/es.png') }}" alt="Español">
+            <span class="lang-text">ES</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="avaliacao-box">
+      <h1>Jurado A - Avaliação</h1>
+
+      <!-- Campo de Foto do Atleta -->
+      <div id="foto-atleta-container" style="display:none;">
+        <label for="foto-atleta">Foto do Atleta</label>
+        <img id="foto-atleta" src="" alt="Foto do Atleta">
+      </div>
+      
+      <div class="input-container">
+        <label for="fase">Fase:</label>
+        <input type="text" id="fase" class="input-text" placeholder="fase" readonly />
+      </div>
+
+      <div class="input-container">
+        <label for="categoria">Categoria:</label>
+        <input type="text" id="categoria" class="input-text" placeholder="Categoria" readonly />
+      </div>
+
+      <div class="input-container">
+        <label for="ritmo">Ritmo:</label>
+        <input type="text" id="ritmo" class="input-text" placeholder="Ritmo" readonly />
+      </div>
+
+      <label for="atleta">Selecionar Atleta</label>
+      <select id="atleta">
+        <option value="">Selecione um atleta</option>
+      </select>
+
+      <div class="label-centralizada">
+        <label for="nota">Nota</label>
+      </div>
+      <div class="input-container">
+        <button id="decrementarNota">-</button>
+        <input type="text" id="nota" value="9.0" readonly />
+        <button id="incrementarNota">+</button>
+      </div>
+
+      <div class="label-centralizada">
+        <label for="vantagem">Vantagem</label>
+      </div>
+      <div class="input-container">
+        <button id="decrementarVantagem">-</button>
+        <input type="text" id="vantagem" value="0.0" readonly />
+        <button id="incrementarVantagem">+</button>
+      </div>
+
+      <button id="enviar">Enviar Nota</button>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/translate-juradoA.js') }}"></script>
+
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+  import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+
+  const appLeitura = initializeApp({ databaseURL: "https://sengu-abc16-default-rtdb.firebaseio.com/" }, "leitura");
+  const appEscrita = initializeApp({ databaseURL: "https://princi-4dfd7-default-rtdb.firebaseio.com/"}, "Escrita");
+
+
+  const dbLeitura = getDatabase(appLeitura);
+  const dbEscrita = getDatabase(appEscrita);
+
+  const atletaSelect = document.getElementById("atleta");
+  const categoriaInput = document.getElementById("categoria");
+  const ritmoInput = document.getElementById("ritmo");
+  const notaInput = document.getElementById("nota");
+  const vantagemInput = document.getElementById("vantagem");
+  const faseInput = document.getElementById("fase");  // Input para mostrar a fase
+  const btnEnviar = document.getElementById("enviar");
+  const fotoAtleta = document.getElementById("foto-atleta");
+
+  let dadosAtletas = {};
+  let nota = 9.0;
+  let vantagem = 0.0;
+  const JURADO = 'A';
+
+  // Função para carregar os atletas no dropdown
+  function carregarAtletas() {
+    onValue(ref(dbLeitura, `avaliacaodejuradoA`), snapshot => {
+      const data = snapshot.val();  // Dados retornados das fases
+
+      if (!data) {
+        console.log("Nenhum dado encontrado.");
+        return;
+      }
+
+      atletaSelect.innerHTML = "<option value=''>Selecione um atleta</option>";
+      dadosAtletas = {};  // Limpando os dados anteriores
+
+      // Carregando os atletas para cada fase
+      for (const fase in data) {
+        for (const ritmo in data[fase]) {
+          const juradoData = data[fase][ritmo]?.juradoA || {};  // Acessando dados do juradoA
+          for (const id in juradoData) {
+            const atleta = juradoData[id];
+            const chave = `${atleta.nome}||${ritmo}`;
+            dadosAtletas[chave] = {
+              nome: atleta.nome,
+              categoria: atleta.categoria,
+              ritmo,
+              id,
+              foto: atleta.foto || "",
+              fase: fase, // Incluindo a fase
+              numero: atleta.numero   // Incluindo o número, se disponível
+            };
+
+            // Criando a opção no select de atletas
+            const option = document.createElement("option");
+            option.value = chave;
+            option.textContent = `${atleta.numero} - ${atleta.nome}`;
+            atletaSelect.appendChild(option);
+          }
+        }
+      }
+    }, //{ onlyOnce: true });
+  }
+
+  // Função para carregar a fase do atleta selecionado
+  function carregarFase() {
+    const chave = atletaSelect.value;
+    const dados = dadosAtletas[chave];
+    
+    if (dados) {
+      categoriaInput.value = dados.categoria;
+      ritmoInput.value = dados.ritmo;
+      faseInput.value = dados.fase;  // Atualiza o campo de input com a fase do Firebase
+      console.log("Fase carregada:", dados.fase); // Verifique se a fase foi carregada corretamente
+    } else {
+      categoriaInput.value = "";
+      ritmoInput.value = "";
+      faseInput.value = "";  // Limpa a fase se o atleta não for encontrado
+    }
+  }
+
+  atletaSelect.addEventListener("change", carregarFase);  // Carregar a fase sempre que o atleta for alterado
+
+  document.getElementById("incrementarNota").addEventListener("click", () => {
+    if (nota < 10.0) {
+      nota = (parseFloat(nota) + 0.1).toFixed(1);
+      notaInput.value = nota;
+    }
+  });
+
+  document.getElementById("decrementarNota").addEventListener("click", () => {
+    if (nota > 9.0) {
+      nota = (parseFloat(nota) - 0.1).toFixed(1);
+      notaInput.value = nota;
+    }
+  });
+
+  document.getElementById("incrementarVantagem").addEventListener("click", () => {
+    if (vantagem < 0.9) {
+      vantagem = (parseFloat(vantagem) + 0.1).toFixed(1);
+      vantagemInput.value = vantagem;
+    }
+  });
+
+  document.getElementById("decrementarVantagem").addEventListener("click", () => {
+    if (vantagem > 0.0) {
+      vantagem = (parseFloat(vantagem) - 0.1).toFixed(1);
+      vantagemInput.value = vantagem;
+    }
+  });
+
+  // Função de envio de nota e fase
+  btnEnviar.addEventListener("click", async () => {
+    const chave = atletaSelect.value;
+    const dados = dadosAtletas[chave];
+    const faseSelecionada = faseInput.value;  // Pegando a fase diretamente do campo de input
+
+    if (!dados || !faseSelecionada) {
+      alert("❌ Atleta ou fase não encontrada.");
+      return;
+    }
+
+    const nome = dados.nome;
+    const categoria = dados.categoria;
+    const ritmo = dados.ritmo;
+    const id = dados.id;  // ID do atleta
+    nota = parseFloat(notaInput.value);
+    vantagem = parseFloat(vantagemInput.value);
+    const notaFinal = (nota + vantagem).toFixed(1);
+
+    const dadosNota = {
+      atleta: nome,
+      categoria,
+      foto: dados.foto || "",
+      numero: dados.numero || "",
+      jurado: JURADO,
+      nota,
+      notaFinal,
+      ritmo,
+      vantagem,
+      fase: faseSelecionada  // Salva a fase selecionada diretamente
+    };
+
+    const chavePadrao = `${nome}_${categoria}_${ritmo}`.toLowerCase().replace(/\s+/g, "_");
+
+    try {
+      // Salvar no Firebase na chave que corresponde à fase selecionada
+      await set(ref(dbEscrita, `${faseSelecionada}${JURADO}/${ritmo}/${chavePadrao}`), dadosNota);
+      await set(ref(dbEscrita, `avaliado${JURADO}/${ritmo}/${chavePadrao}`), true);
+
+      // Remover o atleta da leitura no Firebase
+      await set(ref(dbLeitura, `avaliacaodejurado${JURADO}/${faseSelecionada}/${ritmo}/jurado${JURADO}/${id}`), null);
+
+      // Remover o atleta da lista de atletas
+      delete dadosAtletas[chave];
+
+      // Remover o atleta do dropdown
+      const optionToRemove = document.querySelector(`option[value="${chave}"]`);
+      if (optionToRemove) {
+        optionToRemove.remove();
+      }
+
+      alert("✅ Nota enviada com sucesso!");
+
+      // Resetando valores para nova avaliação
+      nota = 9.0;
+      vantagem = 0.0;
+      notaInput.value = nota.toFixed(1);
+      vantagemInput.value = vantagem.toFixed(1);
+
+      // Carregar novamente os atletas (já sem o atleta removido)
+      carregarAtletas();
+
+    } catch (error) {
+      console.error("Erro ao enviar a nota:", error);
+      alert("❌ Erro ao enviar a nota.");
+    }
+  });
+
+  // Carregar os atletas assim que o script carregar
+  carregarAtletas();
+
+ function carregarFotoAtleta() {
+  const chave = atletaSelect.value;
+  const dados = dadosAtletas[chave];
+  
+  const fotoAtletaContainer = document.getElementById("foto-atleta-container");
+  
+  if (dados && dados.foto) {
+    console.log("Foto do atleta:", dados.foto);  // Verifique a URL da foto
+    fotoAtleta.src = dados.foto;
+    fotoAtletaContainer.style.display = "block";  // Exibe a foto
+  } else {
+    fotoAtletaContainer.style.display = "none";  // Esconde a foto se não houver foto
+  }
+}
+
+document.getElementById("foto-atleta").src = "URL_DA_IMAGEM";
+
+
+</script>
+
+
+
+
+
+
+
+</body>
+</html>

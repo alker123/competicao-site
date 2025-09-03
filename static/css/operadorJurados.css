@@ -1,0 +1,305 @@
+/* Reset e Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    min-height: 100vh;
+    color: #ffffff;
+}
+
+/* CSS para posicionar a imagem no fundo */
+#img-fundo {
+  position: fixed; /* Fixa a imagem no fundo */
+  top: 0;
+  left: 0;
+  width: 100%; /* Cobre toda a largura da tela */
+  height: 100%; /* Cobre toda a altura da tela */
+  object-fit: cover; /* Faz com que a imagem cubra a tela sem distorção */
+  z-index: -1; /* Coloca a imagem atrás do conteúdo */
+}
+
+.container {
+    max-width: 1400px !important;
+    margin: 0 auto;
+    padding: 0 20px !important;
+    position: relative;
+    top: 10px !important;
+    left: -550px !important;
+}
+
+/* Header */
+.header {
+    background: linear-gradient(135deg, #2d2d2d 0%, #404040 100%);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-bottom: 4px solid #ff6b35;
+    position: sticky;
+    top: 0 !important;
+    z-index: 100;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0 !important;
+}
+
+.logo h1 {
+    color: #ff6b35;
+    font-size: 1.8rem !important;
+    font-weight: bold;
+}
+
+.info {
+    display: flex;
+    gap: 2rem;
+    font-size: 0.9rem;
+    color: #fff;
+}
+
+.container3 {
+    position: relative;
+    left: 50px !important;
+
+}
+
+#text {
+    color: #000;
+}
+
+.footer {
+    background: transparent;
+    color: white;
+    text-align: center;
+    padding: 2rem 0;
+    margin-top: 3rem;
+}
+
+.footer p {
+    color: #ccc;
+}
+
+span#total-atletas,
+span#fase-atual {
+   position: relative;
+   left: -200px;
+}
+
+/* Main Content */
+.main {
+    padding: 1rem 0 !important;
+    min-height: calc(100vh - 120px);
+}
+
+/* Estilo geral para o painel */
+.main {
+  background-color: #4f4b4b; /* Cor de fundo */
+  padding: 20px !important;
+  font-family: 'Arial', sans-serif;
+  color: #f1b32d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh !important;
+  position: relative;
+}
+
+/* Títulos */
+h2 {
+  color: #ffffff;
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+h2 span {
+  font-weight: bold;
+  color: #f5790c;
+}
+
+
+
+/* Layout Principal */
+.main-content-wrapper {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.tabela-section {
+    flex: 1;
+    min-width: 0;
+}
+
+.selection-panel {
+    width: 350px;
+    background: linear-gradient(135deg, #404040 0%, #4a4a4a 100%);
+    border-radius: 12px;
+    padding: 1rem;
+    border: 1px solid #555;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    height: fit-content;
+    max-height: calc(100vh - 200px);
+    overflow: visible;
+}
+
+.selection-panel h3 {
+    color: #ff6b35;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-size: 1rem;
+    border-bottom: 2px solid #ff6b35;
+    padding-bottom: 0.3rem;
+}
+
+.selection-group {
+    margin-bottom: 1rem;
+}
+
+.selection-group label {
+    display: block;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 0.3rem;
+    font-size: 0.8rem;
+}
+
+.selection-group select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid #555;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    background: #2d2d2d;
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.selection-group select:hover {
+    border-color: #007bff;
+}
+
+.selection-group select:focus {
+    outline: none;
+    border-color: #ff6b35;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.selection-group select[multiple] {
+    height: 120px;
+    resize: none;
+    overflow-y: auto;
+}
+
+.fase-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.3rem;
+}
+
+@media (max-width: 768px) {
+    .fase-buttons {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .fase-buttons {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* btn Fase */
+.btn-fase {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem;
+    font-size: 0.7rem;
+    background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);
+    color: white;
+    border: 1px solid #545b62;
+    transition: all 0.3s ease;
+    text-align: center;
+    border-radius: 10px;
+    
+}
+
+.btn-fase:hover {
+    background: linear-gradient(135deg, #545b62 0%, #3d4142 100%);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.204);
+    transform: translateY(-2px);
+}
+
+.btn-fase.active {
+    background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+    color: #000;
+    
+}
+
+.btn-fase.active:hover {
+    border-color: #ff6b35;
+    box-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+    transform: scale(1.05);
+}
+
+.fase-atual-display {
+    background: linear-gradient(135deg, #2d2d2d 0%, #3a3a3a 100%);
+    border: 2px solid #ff6b35;
+    border-radius: 6px;
+    padding: 0.15rem 0.4rem; /* ainda menor */
+    text-align: center;
+    margin: 0.2rem 0;
+}
+
+.fase-nome {
+    color: #ff6b35;
+    font-size: 0.75rem;       /* menor ainda */
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    line-height: 1.1;         /* compacta a altura da linha */
+}
+
+.btn-large {
+  display: block;
+  margin: 0 auto;
+  width: 60%;
+  max-width: 300px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border-radius: 20px;
+  border: none;
+  color: #eef2f8;
+  background: linear-gradient(135deg, #002752 0%, #004085 50%, #0056b3 100%);
+  text-align: center;
+}
+
+.btn-large:hover {
+  background: linear-gradient(135deg, #0056b3 0%, #004085 50%, #002752 100%);
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn.btn-info {
+  padding: 0.4rem 0.8rem;
+  border-radius: 10px;
+  border: none;
+  color: #eef2f8;
+  background: linear-gradient(135deg, #002752 0%, #004085 50%, #0056b3 100%);
+  text-align: center;
+  margin-right: 10px; /* Distância entre os botões */
+}
+
+.btn.btn-info:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004085 50%, #002752 100%);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+    transform: translateY(-2px);
+}

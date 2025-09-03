@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Painel do Administrador</title>
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Passion+One:wght@700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+ 
+ <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/adminCalculadoraTeclado.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/adminMobile.css') }}" media="only screen and (max-width: 600px)">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+
+</head>
+<body> 
+   <!-- Header -->
+    <header class="header">
+        <div class="container3">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>🏆 ADMINISTRADOR</h1>
+                    <p>Sistema de Competição de Capoeira</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+  
+
+ <main class="container1"> 
+ <div class="container2">
+ <!-- Cadastrar Usuário -->
+  <h4 id="cadastra1"><i class="fas fa-user-shield"></i> Cadastrar Usuário</h4>
+  <label for="novo-user-nome">Usuário</label>
+  <input type="text" id="novo-user-nome" placeholder="Digite o nome do usuário" />
+
+  <label for="novo-user-senha">Senha</label>
+  <input type="password" id="novo-user-senha" placeholder="Digite a senha" />
+
+  <div class="show-password-container">
+    <input type="checkbox" id="mostrar-senha" />
+    <label for="mostrar-senha" class="mostrar-senha-label">Mostrar senha</label>
+  </div>
+
+  <button id="cadastrar-usuario-btn"><i class="fas fa-save"></i> Cadastrar Usuário</button>
+  
+
+  <!-- Adicionar Atleta -->
+  
+  <h4 id="atleta2"><i class="fas fa-running"></i> Adicionar Dados do Atleta</h4>
+  <label for="nome-atleta">Atleta</label>
+  <input type="text" id="nome-atleta" placeholder="Digite o nome">
+
+  <label for="numero-atleta">Numero</label>
+  <input type="text" id="numero-atleta" placeholder="Digite o numero">
+
+  <!--<hr class="divisor-sessao">-->
+   <label for="nome-categoria">Categoria</label>
+   <select id="nome-categoria">
+      <option value="" disabled selected>Selecionar categoria</option>
+    </select>
+
+  <div class="foto-container">
+      <img id="fotoPerfil" src="img/foto.png" alt="Foto do Atleta">
+      <button id="botaoFoto">Adicionar Foto</button>
+      <input type="file" id="inputFoto" accept="image/*">
+  </div>
+  
+  <button id="add-categoria-btn"><i class="fas fa-paper-plane"></i> Salvar</button>
+
+  
+  <!-- Ver e excluir atletas -->
+  
+    <h4 id="atleta1"><i class="fas fa-user-times"></i> Excluir Atleta</h4>
+    <select id="lista-categorias-2">
+      <option value="" disabled selected>Selecionar categoria</option>
+    </select>
+    <select id="lista-atletas" multiple></select>
+    <button id="excluir-atleta-btn"><i class="fas fa-trash-alt"></i> Excluir</button>
+  
+
+  <!-- Ver e excluir categorias -->
+  
+    <h4 id="categoria1"><i class="fas fa-tag"></i> Excluir Categoria</h4>
+    <select id="lista-categorias" multiple>
+      <option value="" disabled>Selecionar categoria</option>
+    </select>
+    <button id="excluir-categoria-btn"><i class="fas fa-trash-alt"></i> Excluir</button>
+
+    <h4 id="categoria3"><i class="fas fa-tags"></i> Adicionar Categoria</h4>
+  <label for="nome-categoria1">Nome da Categoria</label>
+  <input type="text" id="nome-categoria1" placeholder="Digite a categoria" />
+
+  <button id="add-categoria1-btn"><i class="fas fa-paper-plane"></i> Salvar</button>
+  
+  
+
+  <!-- Enviar para Operador -->
+ 
+  <h4 id="operador1"><i class="fas fa-rocket"></i> Enviar para Operador</h4>
+
+  <!-- Seleção de Atletas -->
+  <label for="atleta-operador">Atletas (selecione um ou mais)</label>
+  <select id="atleta-operador" multiple></select>
+
+  <!-- Seleção de Categorias -->
+  <label for="categoria-operador">Categorias</label>
+  <select id="categoria-operador">
+    <option value="" disabled selected>Selecionar categoria</option>
+  </select>
+
+  <!-- Campo de Foto do Atleta -->
+  <div id="foto-atleta-container" style="display:none;">
+    <label for="foto-atleta">Foto do Atleta</label>
+    <img id="foto-atleta" src="" alt="Foto do Atleta">
+  </div>
+
+  <!-- Botão para Enviar -->
+  <button id="enviar-operador-btn"><i class="fas fa-paper-plane"></i> Enviar para Operador</button>
+
+ 
+
+ </div>
+ </main>
+
+
+     <!--Teclado Virtual -->
+     <div id="botao-container">
+     </div>
+     <div id="teclado" style="display: none;"></div>
+     </div>
+
+     <!-- Calculadora -->
+<div id="calculadora-container" style="display:none;">
+    <div class="calculadora">
+      <button id="close-calculator" onclick="closeCalculator()">❌ Fechar</button> <!-- Botão Fechar -->
+        <input type="text" id="display" disabled />
+        <div class="buttons">
+            <button onclick="appendNumber('1')">1</button>
+            <button onclick="appendNumber('2')">2</button>
+            <button onclick="appendNumber('3')">3</button>
+            <button onclick="appendNumber('*')">*</button>
+            <button onclick="appendNumber('4')">4</button>
+            <button onclick="appendNumber('5')">5</button>
+            <button onclick="appendNumber('6')">6</button>
+            <button onclick="appendNumber('-')">-</button>
+            <button onclick="appendNumber('7')">7</button>
+            <button onclick="appendNumber('8')">8</button>
+            <button onclick="appendNumber('9')">9</button>
+            <button onclick="appendNumber('+')">+</button>
+            <button onclick="clearDisplay()">C</button>
+            <button onclick="appendNumber('0')">0</button>
+            <button onclick="calculateResult()">=</button>
+            <button onclick="appendNumber('/')">/</button>
+            
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+
+  
+  <script type="module" src="{{ url_for('static', filename='js/admin.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/adminSenhaUsuario.js') }}"></script>
+<script src="{{ url_for('static', filename='js/adminTeclado.js') }}"></script>
+
+ 
+</body>
+</html>

@@ -1,0 +1,18 @@
+// Atualizar timestamp
+function updateTimestamp() {
+    const now = new Date();
+    document.getElementById('timestamp').textContent = now.toLocaleString('pt-BR');
+}
+
+updateTimestamp();
+setInterval(updateTimestamp, 1000);
+ 
+<div class="flex justify-between items-center py-2">
+    <span class="font-semibold text-gray-600 flex items-center gap-2">
+        <Clock className="w-4 h-4" />
+        Última Atualização:
+    </span>
+    <span class="text-gray-800" id="timestamp">
+        {new Date().toLocaleString('pt-BR')}
+    </span>
+</div>

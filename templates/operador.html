@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Seleção</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/operadorplanilha.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/operadorJurados.css') }}">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container3">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>🏆 OPERADOR</h1>
+                    <p>Sistema de Competição de Capoeira</p>
+                </div>
+                <div class="selection-group">
+                    <button class="btn btn-info" onclick="window.location.href='sorteio.html'">Sorteio</button>
+                </div>
+               
+                <div class="info">
+                    <span id="total-atletas">0 atletas</span>
+                    <span id="fase-atual">Fase: Principal</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <div class="selection-panel">
+                <h3>Enviar Dados para Jurados</h3>
+                
+                <div class="selection-group">
+                    <label for="ritmo-selection">Ritmo:</label>
+                    <select id="ritmo-selection">
+                        <option value="regional">São Bento Grande da Regional</option>
+                        <option value="angola">São Bento Grande da Angola</option>
+                        <option value="iuna">Iúna</option>
+                    </select>
+                </div>
+
+                <div class="selection-group">
+                    <label for="categoria-selection">Categoria:</label>
+                    <select id="categoria-selection">
+                        <option value="">Selecione uma categoria</option>
+                    </select>
+                </div>
+
+                <div class="selection-group">
+                    <label for="atleta-selection">Atletas (Ctrl + clique para múltiplos):</label>
+                    <select id="atleta-selection" multiple size="8">
+                        <option value="">Carregando atletas...</option>
+                    </select>
+                </div>
+
+                <div class="selection-group">
+                    <label>Fases:</label>
+                    <div class="fase-buttons">
+                        <button id="btn-classificatoria" class="btn btn-fase active" data-fase="classificatória">Classificatória</button>
+                        <button id="btn-oitavas" class="btn btn-fase" data-fase="oitavas">Oitavas</button>
+                        <button id="btn-quartas" class="btn btn-fase" data-fase="quartas">Quartas</button>
+                        <button id="btn-semifinal" class="btn btn-fase" data-fase="semifinal">Semi-final</button>
+                        <button id="btn-final" class="btn btn-fase" data-fase="final">Final</button>
+                    </div>
+                </div>
+                
+                <div class="selection-group">
+                    <div class="fase-atual-display">
+                        <span id="fase-atual-nome" class="fase-nome">Classificatória</span>
+                    </div>
+                </div>
+                
+                <div class="selection-group">
+                    <button id="enviar-jurado" class="btn btn-large">📤 Enviar para Jurado</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTAINER PRINCIPAL -->
+<div id="container-tabelas" class="tabela-container">
+
+    <!-- TABELA PRINCIPAL -->
+    <div id="tabela-principal" class="tabela-view">
+        <div class="container1">
+            <h2>
+                Ritmo: <span id="ritmo-atual">Selecionar</span>
+                <select id="seletor-ritmo" class="select-estilizado">
+                    <option value="">Selecionar</option>
+                    <option value="angola">Angola</option>
+                    <option value="iuna">Iúna</option>
+                    <option value="regional">Regional</option>
+                </select>
+            </h2>
+
+            <div class="botoes-acoes" style="margin-bottom:10px;">
+                <div>
+                    <label for="seletor-categoria" class="label-categoria">Categoria:</label>
+                    <select id="seletor-categoria" class="select-estilizado2">
+                        <option value="">Todas</option>
+                    </select>
+
+                    <!-- Seletor de Grupo de Fases -->
+                    <label for="seletor-fase-grupo">Fase:</label>
+                    <select id="seletor-fase-grupo">
+                        <option>Selecionar</option>
+                        <option value="classificatória">Classificatória</option>
+                        <option value="oitavas">Oitavas</option>
+                        <option value="quartas">Quartas</option>
+                        <option value="semifinal">Semi-final</option>
+                        <option value="final">Final</option>
+                    </select>
+
+                    <button id="PDF0" onclick="BaixarPDF()">Download PDF</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="scroll-tabela">
+            <table id="tabela-principal1" border="1" cellspacing="0" cellpadding="5">
+                <thead>
+                    <tr>
+                        <th id="sel">Sel.</th>
+                        <th id="atleta">Atleta</th>
+                        <th id="categoria">Categoria</th>
+                        <th id="notaA">Nota</th>
+                        <th id="vantagemA">Vantagem</th>
+                        <th id="notaFinalA">Total</th>
+                        <th id="notaB">Nota</th>
+                        <th id="punicaoB">Punição</th>
+                        <th id="notaFinalB">Total</th>
+                        <th id="notaC">Nota</th>
+                        <th id="vantagemC">Vantagem</th>
+                        <th id="notaFinalC">Total</th>
+                        <th id="media">Média</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="13" class="empty-message">Nenhum dado encontrado</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="botoes-acoes1" style="margin-top:10px;">
+            <button id="MediaTotal" onclick="MediaTotal()">Média Total</button>
+            <button id="excluir" onclick="excluirLinhasSelecionadas()">Excluir Linhas Selecionadas</button>
+        </div>
+    </div>
+
+    <!-- TABELA SECUNDÁRIA -->
+    <div id="tabela-secundaria" class="tabela-view" style="display:none;">
+        <div class="container1">
+            <h2 id="h2-1"> 
+               Nota de Atletas
+            </h2>
+
+            <div class="botoes-acoes" style="margin-bottom:10px;">
+                <div>
+                    <label for="seletor-categoria1" class="label-categoria1">Categoria:</label>
+                    <select id="seletor-categoria1" class="select-estilizado3">
+                        <option value="">Todas</option>
+                    </select>
+
+                    <!-- Seletor de Grupo de Fases -->
+                    <label for="seletor-fase-grupo1">Fase:</label>
+                    <select id="seletor-fase-grupo1">
+                        <option>Selecionar</option>
+                        <option value="classificatória">Classificatória</option>
+                        <option value="oitavas">Oitavas</option>
+                        <option value="quartas">Quartas</option>
+                        <option value="semifinal">Semi-final</option>
+                        <option value="final">Final</option>
+                    </select>
+
+                    <button id="PDF1" onclick="baixarPDF1()">Download PDF</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="scroll-tabela1">
+            <table id="tabela-secundaria1" border="1" cellspacing="0" cellpadding="5">
+                <thead>
+                    <tr>
+                        <th id="posicao">Posição</th>
+                        <th id="atleta1">Atleta</th>
+                        <th id="categoria1">Categoria</th>
+                        <th id="regional">Regional</th>
+                        <th id="angola">Angola</th>
+                        <th id="iuna">Iuna</th>
+                        <th id="notaFinal">Nota Final</th>
+                        <th id="classificado">Proxima Fase</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="8" class="empty-message">Nenhum dado encontrado</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="botoes-acoes" style="margin-top:10px;">
+            <button id="voltarParaTabelaPrincipal" onclick="voltarParaTabelaPrincipal()">Voltar</button>
+            <button id="oitavas" onclick="oitavas()">Oitavas</button>
+            <button id="quartas" onclick="quartas()">Quartas</button>
+            <button id="semifinal" onclick="semifinal()">Semi-Final</button>
+            <button id="final" onclick="final()">Final</button>
+            <button id="enviar1" onclick="enviar1()">Enviar</button>
+
+        </div>
+    </div>
+
+</div>
+
+        
+
+        <!-- Footer -->
+    <footer class="footer">
+        <div class="container2">
+            <p>&copy; 2025 Sistema de Competição de Capoeira - Desenvolvido para gerenciar classificações</p>
+        </div>
+    </footer>
+
+    </main>
+
+    <script type="module" src="{{ url_for('static', filename='js/firebase.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/operadorJurados.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/operadorplanilha01.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/operadorplanilha02.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/operadorBotao.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.12/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    
+
+</body>
+</html>
