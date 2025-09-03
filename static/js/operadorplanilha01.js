@@ -70,39 +70,22 @@ async function carregarDadosPorGrupoFase(ritmo, grupoFase) {
 
   // Lê os dados para cada fase dentro do grupo de fase selecionado
 
-  //await Promise.all(Object.entries(caminhos[grupoFase]).map(async ([fase, caminhoRef]) => {
-    //const snap = await get(caminhoRef);
+  await Promise.all(Object.entries(caminhos[grupoFase]).map(async ([fase, caminhoRef]) => {
+    const snap = await get(caminhoRef);
 
-    //if (snap.exists()) {
-      //snap.forEach(child => {
-        // Verifica se existe a chave 'atleta' e 'categoria' antes de adicionar os dados.....
-        //const atleta = child.val().atleta || "";
-        //const categoria = child.val().categoria || "";
-
-        // Se a chave 'atleta' ou 'categoria' não existir, ignora o dado......
-        //if (!atleta || !categoria) return;
-
-        //dados[fase][child.key] = child.val();
-      //});
-    //}
-  //}));
-
-  Object.entries(caminhos[grupoFase]).forEach(([fase, caminhoRef]) => {
-  onValue(caminhoRef, snap => {
     if (snap.exists()) {
       snap.forEach(child => {
+        // Verifica se existe a chave 'atleta' e 'categoria' antes de adicionar os dados.....
         const atleta = child.val().atleta || "";
         const categoria = child.val().categoria || "";
+
+        // Se a chave 'atleta' ou 'categoria' não existir, ignora o dado......
         if (!atleta || !categoria) return;
 
         dados[fase][child.key] = child.val();
       });
-
-      // 🔄 Atualiza sempre que mudar
-      processarDados(dados);
     }
-  });
-});
+  }));
 
 
   const chaves = new Set([...Object.keys(dados.A), ...Object.keys(dados.B), ...Object.keys(dados.C)]);
