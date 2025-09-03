@@ -214,7 +214,9 @@ async function enviarSelecionados(fase, qtd) {
 
     // Verifica se a linha está marcada em verde (selecionada)
     if (tds[0].style.backgroundColor === "lightgreen") {
-      const nomeAtleta = tds[1].textContent;
+      const nomeAtleta = tds[1].textContent; // coluna do atleta
+      
+
 
       // 🔎 Buscar os dados reais do atleta no db3
       const refAtletas = ref(db3, `atletasPorCategoria/${categoriaSelecionada}`);
